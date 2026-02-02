@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  movie-bot:
+    build: .
+    container_name: movie-bot
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+    networks:
+      - bot-network
+    depends_on:
+      - mongo-legacy
+      - mongo-system
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  mongo-legacy:
+    image: mongo:6
+    container_name: mongo-legacy
+    restart: unless-stopped
+    volumes:
+      - mongodb-legacy-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_LEGACY_USER:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_LEGACY_PASS:-admin123}
+    networks:
+      - bot-network
+    command: mongod --quiet --logpath /dev/null
+
+  mongo-system:
+    image: mongo:6
+    container_name: mongo-system
+    restart: unless-stopped
+    volumes:
+      - mongodb-system-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_SYSTEM_USER:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_SYSTEM_PASS:-admin123}
+    networks:
+      - bot-network
+    command: mongod --quiet --logpath /dev/null
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis-cache
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+    networks:
+      - bot-network
+    command: redis-server --appendonly yes
+
+volumes:
+  mongodb-legacy-data:
+  mongodb-system-data:
+  redis-data:
+
+networks:
+  bot-network:
+    driver: bridge
