@@ -1,0 +1,25 @@
+# Core
+aiogram==3.2.0
+python-dotenv==1.0.0
+
+# Database
+motor==3.3.2
+pymongo==4.5.0
+
+# TMDB API
+tmdbv3api==1.7.0
+
+# Fuzzy Matching
+thefuzz==0.20.0
+python-Levenshtein==0.21.1
+
+# Async HTTP
+aiohttp==3.9.1
+aiofiles==23.2.1
+
+# Utils
+pydantic==2.5.0
+pydantic-settings==2.1.0
+
+# Logging
+structlog==23.2.0
