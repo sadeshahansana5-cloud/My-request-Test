@@ -52,7 +52,7 @@ class DatabaseManager:
     
     async def _create_indexes(self):
         """Create necessary indexes"""
-        if self.system_db:
+        if self.system_db is not None:
             await self.system_db.requests.create_index([("user_id", 1)])
             await self.system_db.requests.create_index([("status", 1)])
             await self.system_db.requests.create_index([("tmdb_id", 1)])
